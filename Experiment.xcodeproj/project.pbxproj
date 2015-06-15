@@ -13,6 +13,7 @@
 		466F71411B28D0A700D26CFE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 466F71401B28D0A700D26CFE /* Images.xcassets */; };
 		466F71441B28D0A700D26CFE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 466F71421B28D0A700D26CFE /* LaunchScreen.xib */; };
 		466F71501B28D0A700D26CFE /* ExperimentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466F714F1B28D0A700D26CFE /* ExperimentTests.swift */; };
+		466F715A1B2A6DF600D26CFE /* MeMeTextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466F71591B2A6DF600D26CFE /* MeMeTextController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		466F71491B28D0A700D26CFE /* ExperimentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExperimentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		466F714E1B28D0A700D26CFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		466F714F1B28D0A700D26CFE /* ExperimentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentTests.swift; sourceTree = "<group>"; };
+		466F71591B2A6DF600D26CFE /* MeMeTextController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeMeTextController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				466F71391B28D0A700D26CFE /* AppDelegate.swift */,
+				466F71591B2A6DF600D26CFE /* MeMeTextController.swift */,
 				466F713B1B28D0A700D26CFE /* ViewController.swift */,
 				466F713D1B28D0A700D26CFE /* Main.storyboard */,
 				466F71401B28D0A700D26CFE /* Images.xcassets */,
@@ -214,6 +217,7 @@
 			files = (
 				466F713C1B28D0A700D26CFE /* ViewController.swift in Sources */,
 				466F713A1B28D0A700D26CFE /* AppDelegate.swift in Sources */,
+				466F715A1B2A6DF600D26CFE /* MeMeTextController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +413,7 @@
 				466F71551B28D0A700D26CFE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		466F71561B28D0A700D26CFE /* Build configuration list for PBXNativeTarget "ExperimentTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +422,7 @@
 				466F71581B28D0A700D26CFE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
