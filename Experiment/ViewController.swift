@@ -9,9 +9,7 @@
 import UIKit
 import MobileCoreServices
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  
-  var memeTextController = MeMeTextController()
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
   
   let memeTextAttributes = [
     NSStrokeColorAttributeName : UIColor.blueColor(),
@@ -28,10 +26,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   @IBOutlet weak var bottomText: UITextField!
   
+  @IBOutlet weak var toolBar: UIToolbar!
+  
+  var myMeMe : MeMe!
+  
+  var memImage = UIImage()
+  
+  var myMeMeArray : [MeMe] = []
+  
   
   
   //* Button Actions
-  
   
   @IBAction func useCamera(sender: AnyObject) {
     if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
@@ -47,8 +52,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
   }
 
-  
-    @IBAction func useLibrary(sender: AnyObject) {
+      @IBAction func useLibrary(sender: AnyObject) {
       if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary) {
         
         let imagePicker = UIImagePickerController()
@@ -62,16 +66,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       }
   }
       
-
-  @IBAction func launchImagePicker() {
-
-    // Verifications:  verify that there is a photo library
+    @IBAction func launchImagePicker() {
+      // Verifications:  verify that there is a photo library
       if !UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary){
         println("camera is not available")
         return
       }
-    
-    // Launch the Image picker Controller
+      // Launch the Image picker Controller
       let myController = UIImagePickerController()
       myController.delegate = self
       self.presentViewController(myController, animated: true, completion: nil)
@@ -87,6 +88,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = image }
         println("picked something")
+      
+      
+      myMeMe = MeMe(topText: topText.text, bottomText: bottomText.text, image: imageView.image!,memImage: memImage )
+      
+      myMeMeArray.append(MeMe(topText: topText.text, bottomText: bottomText.text, image: imageView.image!, memImage: generateMemedImage() ))
+      
+      println(myMeMe.topText)
+
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -94,10 +103,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       println("did cancel")
     }
 
-
-  // Helper Functions
-  
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -106,9 +111,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     topText.defaultTextAttributes = memeTextAttributes
     topText.textAlignment = .Center
     bottomText.text = "BOTTOM"
+    bottomText.defaultTextAttributes = memeTextAttributes
     bottomText.textAlignment = .Center
 
-    topText.delegate = memeTextController
+    topText.delegate = self
+    bottomText.delegate = self
+    
   }
 
   override func didReceiveMemoryWarning() {
@@ -120,8 +128,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   @IBAction func activityView () {
     // let image = UIImage()
-    let nextViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-    presentViewController(nextViewController, animated: true, completion: nil)
+    
+    
+    imageView.image = myMeMeArray[1].memImage
+    
+    //let nextViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+    //presentViewController(nextViewController, animated: true, completion: nil)
   }
   
   @IBAction func alertView () {
@@ -134,12 +146,101 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     controller.addAction(alertAction)
     self.presentViewController(controller, animated: true, completion: nil)
-    
-  }
+    }
 
   
+  func generateMemedImage() -> UIImage {
+    
+    // TODO: Hide toolbar and navbar
+    self.toolBar.hidden = true
+    
+    // Render view to an image
+    UIGraphicsBeginImageContext(self.view.frame.size)
+    self.view.drawViewHierarchyInRect(self.view.frame,afterScreenUpdates: true)
+    let memedImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    // TODO:  Show toolbar and navbar
+    self.toolBar.hidden = false
+
+    
+    return memedImage
+  }
   
+  
+  
+  
+  func textFieldDidBeginEditing(textField: UITextField) {
+    if textField.text == "TOP" {
+      textField.text = ""
+    }
+    if textField.text == "BOTTOM" {
+      textField.text = ""
+    }
+  }
+  
+  func textFieldShouldReturn(textField: UITextField) -> Bool {
+    println("In textFieldShouldReturn")
+    if textField.text == "" {
+      textField.text = "TOP"
+    }
+    textField.resignFirstResponder()
+    
+    return true;
+  }
+  
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(true)
+    self.subscribeToKeyboardNotifications()
+  }
+  
+  override func viewWillDisappear(animated: Bool) {
+    super.viewWillDisappear(true)
+    self.unsubscribeFromKeyboardNotifications()
+  }
+  
+  
+  
+  func subscribeToKeyboardNotifications() {
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+    NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+  }
+  
+  func unsubscribeFromKeyboardNotifications() {
+    NSNotificationCenter.defaultCenter().removeObserver(self)
+  }
+  
+  
+  
+  func keyboardWillShow(notification: NSNotification) {
+    println("in keyboardWillShow")
+    if bottomText.isFirstResponder() {
+    self.view.frame.origin.y -= getKeyboardHeight(notification)
+    println("doing bottom - moving the screen") }
+  }
+  
+  
+  func keyboardWillHide(notification: NSNotification) {
+    println("in keyboardWillHide")
+
+    if self.view.frame.origin.y != 0{
+    self.view.frame.origin.y += getKeyboardHeight(notification)
+      println(" doing bottom - putting screen back") }
+  }
+  
+  
+  func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+    let userInfo = notification.userInfo
+    let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+    return keyboardSize.CGRectValue().height
+  }
 }
+
+
+
+  
+
 
 
 
