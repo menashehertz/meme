@@ -130,9 +130,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // let image = UIImage()
     
     
-    imageView.image = myMeMeArray[1].memImage
+    // imageView.image = myMeMeArray[1].memImage
     
-    //let nextViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+    let nextViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
     //presentViewController(nextViewController, animated: true, completion: nil)
   }
   
@@ -145,8 +145,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { action in self.dismissViewControllerAnimated(true, completion: nil) }
     
     controller.addAction(alertAction)
-    self.presentViewController(controller, animated: true, completion: nil)
-    }
+    //self.presentViewController(controller, animated: true, completion: nil)
+    self.presentViewController(controller, animated: true) {action in println("finished AlertView")}
+   }
 
   
   func generateMemedImage() -> UIImage {
