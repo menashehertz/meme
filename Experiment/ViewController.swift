@@ -12,13 +12,16 @@ import MobileCoreServices
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
   
   let memeTextAttributes = [
-    NSStrokeColorAttributeName : UIColor.blueColor(),
+    NSStrokeColorAttributeName : UIColor.cyanColor(),
     NSForegroundColorAttributeName : UIColor.brownColor(),
-    NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 20)!
-    //NSStrokeWidthAttributeName : //TODO: Fill in appropriate Float
+    NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 20)!,
+    NSStrokeWidthAttributeName : NSNumber(float: -3.0)
   ]
   
   var image = UIImage()
+  
+  let appDelg = UIApplication.sharedApplication().delegate as! AppDelegate
+  
   
   @IBOutlet weak var imageView: UIImageView!
   
@@ -32,11 +35,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   var memImage = UIImage()
   
-  var myMeMeArray : [MeMe] = []
-  
-  
   
   //* Button Actions
+  @IBAction func cancel(sender: AnyObject) {
+    if let navigationController = self.navigationController {
+      navigationController.popViewControllerAnimated(true)    }
+    
+    
+  }
   
   @IBAction func useCamera(sender: AnyObject) {
     if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
@@ -92,9 +98,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       
       myMeMe = MeMe(topText: topText.text, bottomText: bottomText.text, image: imageView.image!,memImage: memImage )
       
-      myMeMeArray.append(MeMe(topText: topText.text, bottomText: bottomText.text, image: imageView.image!, memImage: generateMemedImage() ))
-      
       println(myMeMe.topText)
+      
+      self.navigationItem.leftBarButtonItem!.enabled = true;
+
 
     }
     
@@ -117,6 +124,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     topText.delegate = self
     bottomText.delegate = self
     
+    
+    self.navigationItem.rightBarButtonItem!.enabled = false;
+    self.navigationItem.leftBarButtonItem!.enabled = false;
+
   }
 
   override func didReceiveMemoryWarning() {
@@ -132,8 +143,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // imageView.image = myMeMeArray[1].memImage
     
+    
+    
     let nextViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-    //presentViewController(nextViewController, animated: true, completion: nil)
+    presentViewController(nextViewController, animated: true) { (self.appDelg).myMeMeArray.append(MeMe(topText: self.topText.text, bottomText: self.bottomText.text, image: self.imageView.image!, memImage: self.generateMemedImage() )) ;      self.navigationItem.rightBarButtonItem!.enabled = true }
   }
   
   @IBAction func alertView () {
@@ -193,11 +206,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(true)
+    self.tabBarController?.tabBar.hidden = true
     self.subscribeToKeyboardNotifications()
   }
   
   override func viewWillDisappear(animated: Bool) {
     super.viewWillDisappear(true)
+    self.tabBarController?.tabBar.hidden = false
     self.unsubscribeFromKeyboardNotifications()
   }
   
