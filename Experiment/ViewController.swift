@@ -93,12 +93,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       if mediaType.isEqualToString(kUTTypeImage as! String) {
         image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = image }
-        println("picked something")
+        //println("picked something")
       
       
       myMeMe = MeMe(topText: topText.text, bottomText: bottomText.text, image: imageView.image!,memImage: memImage )
       
-      println(myMeMe.topText)
+      //println(myMeMe.topText)
       
       self.navigationItem.leftBarButtonItem!.enabled = true;
 
@@ -107,7 +107,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
       self.dismissViewControllerAnimated(true, completion: nil)
-      println("did cancel")
+      //println("did cancel")
     }
 
   
@@ -124,9 +124,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     topText.delegate = self
     bottomText.delegate = self
     
+    if (self.appDelg).myMeMeArray.count < 1 {
+      self.navigationItem.rightBarButtonItem!.enabled = false }
     
-    self.navigationItem.rightBarButtonItem!.enabled = false;
-    self.navigationItem.leftBarButtonItem!.enabled = false;
+      self.navigationItem.leftBarButtonItem!.enabled = false
 
   }
 
@@ -194,7 +195,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
-    println("In textFieldShouldReturn")
+    //println("In textFieldShouldReturn")
     if textField.text == "" {
       textField.text = "TOP"
     }
@@ -230,19 +231,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   
   func keyboardWillShow(notification: NSNotification) {
-    println("in keyboardWillShow")
+    //println("in keyboardWillShow")
     if bottomText.isFirstResponder() {
     self.view.frame.origin.y -= getKeyboardHeight(notification)
-    println("doing bottom - moving the screen") }
+    //println("doing bottom - moving the screen") 
+    }
   }
   
   
   func keyboardWillHide(notification: NSNotification) {
-    println("in keyboardWillHide")
+    //println("in keyboardWillHide")
 
     if self.view.frame.origin.y != 0{
     self.view.frame.origin.y += getKeyboardHeight(notification)
-      println(" doing bottom - putting screen back") }
+      //println(" doing bottom - putting screen back") 
+    }
   }
   
   

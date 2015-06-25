@@ -67,9 +67,9 @@ class MeMeCollectionViewController: UICollectionViewController {
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        println("before - in cellfrom row at indexpath")
+        //println("before - in cellfrom row at indexpath")
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewCell
-        println("after - in cellfrom row at indexpath")
+        //println("after - in cellfrom row at indexpath")
       
       //cell.celllabel.text = "hello"
     
@@ -84,9 +84,7 @@ class MeMeCollectionViewController: UICollectionViewController {
     var controller : ViewController //1
     
     controller = self.storyboard?.instantiateViewControllerWithIdentifier("edt") as! ViewController //2
-    
-    println("rock")
-    
+        
     if let navigationController = self.navigationController {
       navigationController.pushViewController(controller, animated: true)    }
     

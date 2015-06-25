@@ -32,7 +32,7 @@ class MeMeTableViewController: UITableViewController {
     super.viewWillAppear(true)
     
     if (self.appDelg).myMeMeArray.count > 0 {
-      println("greater than 0")
+      //println("greater than 0")
       memeTable.reloadData()
       return
     }
@@ -85,7 +85,7 @@ class MeMeTableViewController: UITableViewController {
 
   
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        println("in cellfrom row at indexpath")
+        //println("in cellfrom row at indexpath")
         let cell = tableView.dequeueReusableCellWithIdentifier("memecell", forIndexPath: indexPath) as! MeMeTableViewCell
         cell.titleLabel.text = self.appDelg.myMeMeArray[indexPath.row].topText
         cell.memimg.image = self.appDelg.myMeMeArray[indexPath.row].memImage
