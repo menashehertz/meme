@@ -11,6 +11,13 @@ import MobileCoreServices
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
   
+
+  
+  let appDelg = UIApplication.sharedApplication().delegate as! AppDelegate
+  
+  var image = UIImage()
+  var myMeMe : MeMe!
+  var memImage = UIImage()
   let memeTextAttributes = [
     NSStrokeColorAttributeName : UIColor.cyanColor(),
     NSForegroundColorAttributeName : UIColor.brownColor(),
@@ -18,48 +25,39 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     NSStrokeWidthAttributeName : NSNumber(float: -3.0)
   ]
   
-  var image = UIImage()
-  
-  let appDelg = UIApplication.sharedApplication().delegate as! AppDelegate
-  
-  
   @IBOutlet weak var imageView: UIImageView!
-  
   @IBOutlet weak var topText: UITextField!
-  
   @IBOutlet weak var bottomText: UITextField!
-  
   @IBOutlet weak var toolBar: UIToolbar!
   
-  var myMeMe : MeMe!
-  
-  var memImage = UIImage()
-  
-  
   //* Button Actions
-  @IBAction func cancel(sender: AnyObject) {
-    if let navigationController = self.navigationController {
-      navigationController.popViewControllerAnimated(true)    }
-    
-    
-  }
-  
-  @IBAction func useCamera(sender: AnyObject) {
-    if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
-      
-      let imagePicker = UIImagePickerController()
-      
-      imagePicker.delegate = self
-      imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-      imagePicker.mediaTypes = [kUTTypeImage as NSString]
-      imagePicker.allowsEditing = false
-      
-      self.presentViewController(imagePicker, animated: true, completion: nil)
+
+    @IBAction func cancel(sender: AnyObject) {
+      if let navigationController = self.navigationController {
+        navigationController.popViewControllerAnimated(true)    }
     }
-  }
+    
+
+    @IBAction func useCamera(sender: AnyObject) {
+
+      // Verifications:  verify that there is a camera
+      if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+        
+        let imagePicker = UIImagePickerController()
+        
+        imagePicker.delegate = self
+        imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+        imagePicker.mediaTypes = [kUTTypeImage as NSString]
+        imagePicker.allowsEditing = false
+        
+        self.presentViewController(imagePicker, animated: true, completion: nil)
+      }
+    }
 
       @IBAction func useLibrary(sender: AnyObject) {
-      if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary) {
+
+        // Verifications:  verify that there is a photo library
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary) {
         
         let imagePicker = UIImagePickerController()
         
@@ -72,18 +70,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
       }
   }
       
-    @IBAction func launchImagePicker() {
-      // Verifications:  verify that there is a photo library
-      if !UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary){
-        println("camera is not available")
-        return
-      }
-      // Launch the Image picker Controller
-      let myController = UIImagePickerController()
-      myController.delegate = self
-      self.presentViewController(myController, animated: true, completion: nil)
-  }
-  
   
   //* Image picker control delegate methods
   
@@ -94,15 +80,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = image }
         //println("picked something")
-      
-      
+
       myMeMe = MeMe(topText: topText.text, bottomText: bottomText.text, image: imageView.image!,memImage: memImage )
-      
-      //println(myMeMe.topText)
-      
       self.navigationItem.leftBarButtonItem!.enabled = true;
-
-
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -140,33 +120,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   @IBAction func activityView () {
     // let image = UIImage()
-    
-    
     // imageView.image = myMeMeArray[1].memImage
-    
-    
-    
     let nextViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
     presentViewController(nextViewController, animated: true) { (self.appDelg).myMeMeArray.append(MeMe(topText: self.topText.text, bottomText: self.bottomText.text, image: self.imageView.image!, memImage: self.generateMemedImage() )) ;      self.navigationItem.rightBarButtonItem!.enabled = true }
   }
   
-  @IBAction func alertView () {
-    let controller = UIAlertController()
-    controller.title = "This is the title"
-    controller.message = "Hope it is going well"
-    
-    // let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: { action in self.dismissViewControllerAnimated(true, completion: nil) } )
-    let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { action in self.dismissViewControllerAnimated(true, completion: nil) }
-    
-    controller.addAction(alertAction)
-    //self.presentViewController(controller, animated: true, completion: nil)
-    self.presentViewController(controller, animated: true) {action in println("finished AlertView")}
-   }
+//  @IBAction func alertView () {
+//    let controller = UIAlertController()
+//    controller.title = "This is the title"
+//    controller.message = "Hope it is going well"
+//    
+//    // let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: { action in self.dismissViewControllerAnimated(true, completion: nil) } )
+//    let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { action in self.dismissViewControllerAnimated(true, completion: nil) }
+//    
+//    controller.addAction(alertAction)
+//    //self.presentViewController(controller, animated: true, completion: nil)
+//    self.presentViewController(controller, animated: true) {action in println("finished AlertView")}
+//   }
 
   
   func generateMemedImage() -> UIImage {
     
-    // TODO: Hide toolbar and navbar
     self.toolBar.hidden = true
     
     // Render view to an image
@@ -175,15 +149,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let memedImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     
-    // TODO:  Show toolbar and navbar
     self.toolBar.hidden = false
-
     
     return memedImage
   }
-  
-  
-  
   
   func textFieldDidBeginEditing(textField: UITextField) {
     if textField.text == "TOP" {
@@ -216,7 +185,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     self.tabBarController?.tabBar.hidden = false
     self.unsubscribeFromKeyboardNotifications()
   }
-  
   
   
   func subscribeToKeyboardNotifications() {
@@ -255,12 +223,3 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     return keyboardSize.CGRectValue().height
   }
 }
-
-
-
-  
-
-
-
-
-
