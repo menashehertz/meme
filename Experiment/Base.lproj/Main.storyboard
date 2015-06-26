@@ -69,7 +69,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="aQJ-QB-G2r">
-                        <barButtonItem key="leftBarButtonItem" title="Share" id="eIa-1N-Nmj">
+                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="eIa-1N-Nmj">
                             <connections>
                                 <action selector="activityView" destination="vXZ-lx-hvc" id="sNv-ri-ifO"/>
                             </connections>
@@ -82,6 +82,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="bottomText" destination="1vz-tI-1Tz" id="0NT-Iu-tWb"/>
+                        <outlet property="cameraBarButton" destination="wvs-Wv-GHT" id="apc-Qs-fZF"/>
                         <outlet property="imageView" destination="bgd-Pw-TTK" id="YEN-tK-W1t"/>
                         <outlet property="toolBar" destination="zEd-Hm-YAl" id="gMJ-8p-q9M"/>
                         <outlet property="topText" destination="VkI-Qc-Pfo" id="TRk-DE-fON"/>

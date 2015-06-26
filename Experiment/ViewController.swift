@@ -11,17 +11,14 @@ import MobileCoreServices
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
   
-
-  
   let appDelg = UIApplication.sharedApplication().delegate as! AppDelegate
-  
   var image = UIImage()
   var myMeMe : MeMe!
   var memImage = UIImage()
   let memeTextAttributes = [
     NSStrokeColorAttributeName : UIColor.cyanColor(),
     NSForegroundColorAttributeName : UIColor.brownColor(),
-    NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 20)!,
+    NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 30)!,
     NSStrokeWidthAttributeName : NSNumber(float: -3.0)
   ]
   
@@ -29,20 +26,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   @IBOutlet weak var topText: UITextField!
   @IBOutlet weak var bottomText: UITextField!
   @IBOutlet weak var toolBar: UIToolbar!
+  @IBOutlet weak var cameraBarButton: UIBarButtonItem!
   
   //* Button Actions
 
     @IBAction func cancel(sender: AnyObject) {
-      if let navigationController = self.navigationController {
+      if let navigationController = navigationController {
         navigationController.popViewControllerAnimated(true)    }
     }
     
 
     @IBAction func useCamera(sender: AnyObject) {
 
-      // Verifications:  verify that there is a camera
-      if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
-        
         let imagePicker = UIImagePickerController()
         
         imagePicker.delegate = self
@@ -50,8 +45,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.mediaTypes = [kUTTypeImage as NSString]
         imagePicker.allowsEditing = false
         
-        self.presentViewController(imagePicker, animated: true, completion: nil)
-      }
+        presentViewController(imagePicker, animated: true, completion: nil)
     }
 
       @IBAction func useLibrary(sender: AnyObject) {
@@ -66,7 +60,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.mediaTypes = [kUTTypeImage as NSString]
         imagePicker.allowsEditing = false
         
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        presentViewController(imagePicker, animated: true, completion: nil)
       }
   }
       
@@ -74,7 +68,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   //* Image picker control delegate methods
   
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-      self.dismissViewControllerAnimated(true, completion: nil)
+      dismissViewControllerAnimated(true, completion: nil)
       let mediaType = info[UIImagePickerControllerMediaType] as! NSString
       if mediaType.isEqualToString(kUTTypeImage as! String) {
         image = info[UIImagePickerControllerOriginalImage] as! UIImage
@@ -82,11 +76,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //println("picked something")
 
       myMeMe = MeMe(topText: topText.text, bottomText: bottomText.text, image: imageView.image!,memImage: memImage )
-      self.navigationItem.leftBarButtonItem!.enabled = true;
+      navigationItem.leftBarButtonItem!.enabled = true;
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-      self.dismissViewControllerAnimated(true, completion: nil)
+      dismissViewControllerAnimated(true, completion: nil)
       //println("did cancel")
     }
 
@@ -94,6 +88,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
+    cameraBarButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
     topText.text = "TOP"
     topText.defaultTextAttributes = memeTextAttributes
     topText.textAlignment = .Center
@@ -104,10 +99,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     topText.delegate = self
     bottomText.delegate = self
     
-    if (self.appDelg).myMeMeArray.count < 1 {
-      self.navigationItem.rightBarButtonItem!.enabled = false }
+    if appDelg.myMeMeArray.count < 1 {
+      navigationItem.rightBarButtonItem!.enabled = false }
     
-      self.navigationItem.leftBarButtonItem!.enabled = false
+      navigationItem.leftBarButtonItem!.enabled = false
 
   }
 
@@ -119,37 +114,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
   
   @IBAction func activityView () {
-    // let image = UIImage()
-    // imageView.image = myMeMeArray[1].memImage
     let nextViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
     presentViewController(nextViewController, animated: true) { (self.appDelg).myMeMeArray.append(MeMe(topText: self.topText.text, bottomText: self.bottomText.text, image: self.imageView.image!, memImage: self.generateMemedImage() )) ;      self.navigationItem.rightBarButtonItem!.enabled = true }
   }
   
-//  @IBAction func alertView () {
-//    let controller = UIAlertController()
-//    controller.title = "This is the title"
-//    controller.message = "Hope it is going well"
-//    
-//    // let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: { action in self.dismissViewControllerAnimated(true, completion: nil) } )
-//    let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { action in self.dismissViewControllerAnimated(true, completion: nil) }
-//    
-//    controller.addAction(alertAction)
-//    //self.presentViewController(controller, animated: true, completion: nil)
-//    self.presentViewController(controller, animated: true) {action in println("finished AlertView")}
-//   }
-
-  
   func generateMemedImage() -> UIImage {
     
-    self.toolBar.hidden = true
+    toolBar.hidden = true
     
     // Render view to an image
-    UIGraphicsBeginImageContext(self.view.frame.size)
-    self.view.drawViewHierarchyInRect(self.view.frame,afterScreenUpdates: true)
+    UIGraphicsBeginImageContext(view.frame.size)
+    view.drawViewHierarchyInRect(view.frame,afterScreenUpdates: true)
     let memedImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
     
-    self.toolBar.hidden = false
+    toolBar.hidden = false
     
     return memedImage
   }
@@ -164,7 +143,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   }
   
   func textFieldShouldReturn(textField: UITextField) -> Bool {
-    //println("In textFieldShouldReturn")
     if textField.text == "" {
       textField.text = "TOP"
     }
@@ -176,14 +154,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(true)
-    self.tabBarController?.tabBar.hidden = true
-    self.subscribeToKeyboardNotifications()
+    tabBarController?.tabBar.hidden = true
+    subscribeToKeyboardNotifications()
   }
   
   override func viewWillDisappear(animated: Bool) {
     super.viewWillDisappear(true)
-    self.tabBarController?.tabBar.hidden = false
-    self.unsubscribeFromKeyboardNotifications()
+    tabBarController?.tabBar.hidden = false
+    unsubscribeFromKeyboardNotifications()
   }
   
   
@@ -201,7 +179,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   func keyboardWillShow(notification: NSNotification) {
     //println("in keyboardWillShow")
     if bottomText.isFirstResponder() {
-    self.view.frame.origin.y -= getKeyboardHeight(notification)
+    view.frame.origin.y -= getKeyboardHeight(notification)
     //println("doing bottom - moving the screen") 
     }
   }
@@ -210,8 +188,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
   func keyboardWillHide(notification: NSNotification) {
     //println("in keyboardWillHide")
 
-    if self.view.frame.origin.y != 0{
-    self.view.frame.origin.y += getKeyboardHeight(notification)
+    if view.frame.origin.y != 0{
+    view.frame.origin.y += getKeyboardHeight(notification)
       //println(" doing bottom - putting screen back") 
     }
   }
